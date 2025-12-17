@@ -7,13 +7,13 @@ require('dotenv').config();
 
 const session = require('express-session');
 
-// connect-mongo can export differently depending on version/build (CJS vs ESM)
-// This setup works across common variations.
+// connect-mongo export can vary (CJS vs ESM default export)
 const ConnectMongo = require('connect-mongo');
-const MongoStore = ConnectMongo?.default || ConnectMongo;
+const MongoStore = ConnectMongo.default || ConnectMongo;
 
 // Routers
 const authRouter = require('./routes/auth');
+const tripsRouter = require('./routes/trips');
 
 const app = express();
 
@@ -39,27 +39,19 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* ======================= SESSIONS ======================= */
-let sessionStore;
-
-// Prefer MongoStore.create() when available (most common)
-if (MongoStore && typeof MongoStore.create === 'function') {
-  sessionStore = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
-} else {
-  // Fallback: constructor-style store (some builds/versions)
-  sessionStore = new MongoStore({ mongoUrl: process.env.MONGODB_URI });
-}
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,
+    store: MongoStore.create
+      ? MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
+      : new MongoStore({ mongoUrl: process.env.MONGODB_URI }),
     cookie: { httpOnly: true },
   })
 );
 
-// Make userId available in ALL EJS views
+// Make userId available in all EJS views
 app.use((req, res, next) => {
   res.locals.userId = req.session.userId || null;
   next();
@@ -71,16 +63,14 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRouter);
-
-// Optional: temporary placeholder 
-app.get('/trips', (req, res) => {
-  res.send('Trips route coming next ✅');
-});
+app.use('/trips', tripsRouter);
 
 /* ======================= SERVER ======================= */
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
+
 
 
