@@ -1,23 +1,19 @@
-<h1><%= trip.title || "Untitled Trip" %></h1>
+<h1><%= trip.title %></h1>
 
 <p><strong>Destination:</strong> <%= trip.destination || "—" %></p>
 <p><strong>Start:</strong> <%= trip.startDate ? trip.startDate.toDateString() : "—" %></p>
 <p><strong>End:</strong> <%= trip.endDate ? trip.endDate.toDateString() : "—" %></p>
+<p><strong>Notes:</strong> <%= trip.notes || "—" %></p>
 
-<% if (trip.notes) { %>
-  <p><strong>Notes:</strong></p>
-  <p><%= trip.notes %></p>
-<% } %>
+<p>
+  <a href="/trips/<%= trip._id %>/edit">Edit</a>
+</p>
 
-<br />
-
-<a href="/trips/<%= trip._id %>/edit">Edit</a>
-
-<form action="/trips/<%= trip._id %>?_method=DELETE" method="POST" style="display:inline;">
-  <button type="submit">Delete</button>
+<form action="/trips/<%= trip._id %>?_method=DELETE" method="POST">
+  <button type="submit" onclick="return confirm('Delete this trip?')">Delete</button>
 </form>
 
-<br /><br />
-<a href="/trips">Back to Trips</a>
+<p><a href="/trips">Back to Trips</a></p>
+
 
 

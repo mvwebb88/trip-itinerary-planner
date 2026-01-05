@@ -3,6 +3,10 @@
 <a href="/trips/new">+ New Trip</a>
 <hr />
 
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
 <% if (!trips.length) { %>
   <p>No trips yet.</p>
 <% } %>
@@ -10,16 +14,18 @@
 <ul>
   <% trips.forEach(trip => { %>
     <li>
-      <a href="/trips/<%= trip._id %>">
-        <%= trip.title || "Untitled Trip" %>
-      </a>
-      <% if (trip.destination) { %>
-        - <%= trip.destination %>
-      <% } %>
+      <a href="/trips/<%= trip._id %>"><%= trip.title %></a>
+      <% if (trip.destination) { %> - <%= trip.destination %> <% } %>
+
+      | <a href="/trips/<%= trip._id %>/edit">Edit</a>
+
+      <form action="/trips/<%= trip._id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" onclick="return confirm('Delete this trip?')">Delete</button>
+      </form>
     </li>
   <% }) %>
 </ul>
 
-<br />
 <a href="/">Back Home</a>
+
 
