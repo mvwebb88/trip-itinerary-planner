@@ -7,43 +7,34 @@ function renderSignUp(req, res) {
   res.render("auth/sign-up", { error: null });
 }
 
-// Handle sign-up submit
+// Handle sign-up
 async function signUp(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).render("auth/sign-up", { error: "All fields are required." });
     }
 
-    // Check if email already exists
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
-      return res.status(400).render("auth/sign-up", { error: "Email is already in use." });
+      return res.status(400).render("auth/sign-up", { error: "Email is already registered." });
     }
 
-    // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       passwordHash,
     });
 
-    // Save user in session
-    req.session.user = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    };
+    req.session.user = { _id: user._id, name: user.name, email: user.email };
 
-    // Go to trips after signup
-    return res.redirect("/trips");
+    req.session.save(() => {
+      res.redirect("/trips");
+    });
   } catch (err) {
-    // Log the real error
     console.error("SIGN-UP ERROR:", err);
     return res.status(500).render("auth/sign-up", { error: "Something went wrong. Check terminal." });
   }
@@ -54,39 +45,33 @@ function renderSignIn(req, res) {
   res.render("auth/sign-in", { error: null });
 }
 
-// Handle sign-in submit
+// Handle sign-in
 async function signIn(req, res) {
   try {
     const { email, password } = req.body;
 
-    // Validate required fields
+    console.log("SIGNIN HIT:", { email });
+
     if (!email || !password) {
       return res.status(400).render("auth/sign-in", { error: "Email and password are required." });
     }
 
-    // Find user
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return res.status(401).render("auth/sign-in", { error: "Invalid credentials." });
+      return res.status(401).render("auth/sign-in", { error: "Invalid email or password." });
     }
 
-    // Compare password
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) {
-      return res.status(401).render("auth/sign-in", { error: "Invalid credentials." });
+      return res.status(401).render("auth/sign-in", { error: "Invalid email or password." });
     }
 
-    // Save user in session
-    req.session.user = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    };
+    req.session.user = { _id: user._id, name: user.name, email: user.email };
 
-    // Go to trips after login
-    return res.redirect("/trips");
+    req.session.save(() => {
+      res.redirect("/trips");
+    });
   } catch (err) {
-    // Log the real error
     console.error("SIGN-IN ERROR:", err);
     return res.status(500).render("auth/sign-in", { error: "Something went wrong. Check terminal." });
   }
@@ -106,6 +91,8 @@ module.exports = {
   signIn,
   signOut,
 };
+
+
 
 
 
