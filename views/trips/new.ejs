@@ -1,48 +1,54 @@
-<%- include("../partials/nav") %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Trip</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
 
-<div class="container">
-  <div class="card">
-    <h1>New Trip</h1>
+  <body>
+    <div class="container">
+      <%- include("../partials/nav") %>
 
-    <% if (typeof error !== "undefined" && error) { %>
-      <div class="alert"><%= error %></div>
-    <% } %>
+      <div class="card" style="margin-top: 18px;">
+        <h2>Create a New Trip</h2>
 
-    <form action="/trips" method="POST">
-      <div>
-        <label>Title</label>
-        <input name="title" required placeholder="e.g., Weekend in NYC" />
+        <% if (error) { %>
+          <div class="alert"><%= error %></div>
+        <% } %>
+
+        <form class="form" action="/trips" method="POST">
+          <div class="field">
+            <label>Title</label>
+            <input name="title" required />
+          </div>
+
+          <div class="field">
+            <label>Destination</label>
+            <input name="destination" />
+          </div>
+
+          <div class="field">
+            <label>Start Date</label>
+            <input type="date" name="startDate" />
+          </div>
+
+          <div class="field">
+            <label>End Date</label>
+            <input type="date" name="endDate" />
+          </div>
+
+          <div class="form-actions">
+            <button class="btn primary" type="submit">Create Trip</button>
+            <a class="btn" href="/trips">Cancel</a>
+          </div>
+        </form>
       </div>
+    </div>
+  </body>
+</html>
 
-      <div>
-        <label>Destination</label>
-        <input name="destination" placeholder="e.g., New York City" />
-      </div>
-
-      <div class="row">
-        <div style="flex:1;">
-          <label>Start Date</label>
-          <input type="date" name="startDate" />
-        </div>
-
-        <div style="flex:1;">
-          <label>End Date</label>
-          <input type="date" name="endDate" />
-        </div>
-      </div>
-
-      <div>
-        <label>Notes</label>
-        <textarea name="notes" placeholder="Packing list, hotel, flight info..."></textarea>
-      </div>
-
-      <div class="row">
-        <button class="btn" type="submit">Create Trip</button>
-        <a class="btn btn-secondary" href="/trips">Cancel</a>
-      </div>
-    </form>
-  </div>
-</div>
 
 
 

@@ -1,0 +1,32 @@
+/* public/styles.css */
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #0b1f2a;
+
+  background-image:
+    linear-gradient(to bottom, rgba(255,255,255,0.65), rgba(255,255,255,0.78)),
+    url("https://www.candorblog.com/wp-content/uploads/2017/05/travel-022.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.container {
+  width: min(1000px, 92%);
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.card {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+}

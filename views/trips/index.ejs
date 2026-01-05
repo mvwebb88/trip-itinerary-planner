@@ -1,40 +1,60 @@
-<%- include("../partials/nav") %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Trips</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
 
-<div class="container">
-  <div class="card">
-    <div class="row">
-      <h1>Your Trips</h1>
-      <a class="btn" href="/trips/new">+ New Trip</a>
-    </div>
+  <body>
+    <div class="container">
+      <%- include("../partials/nav") %>
 
-    <hr />
+      <div class="hero">
+        <h1>Your Trips</h1>
+        <p>All your saved trips — organized and private to your account.</p>
+        <div class="actions">
+          <a class="btn primary" href="/trips/new">+ New Trip</a>
+        </div>
+      </div>
 
-    <% if (!trips.length) { %>
-      <p>No trips yet. Create your first adventure ✈️</p>
-    <% } else { %>
-      <ul class="list">
+      <div class="card">
+        <h2>Trip List</h2>
+
+        <% if (!trips.length) { %>
+          <p class="muted">No trips yet. Create your first trip!</p>
+        <% } %>
+
         <% trips.forEach(trip => { %>
-          <li class="list-item">
-            <div class="list-main">
-              <a class="list-title" href="/trips/<%= trip._id %>"><%= trip.title %></a>
-              <div class="list-sub">
-                <%= trip.destination ? trip.destination : "No destination yet" %>
+          <div class="trip-row" style="margin-top: 10px;">
+            <div>
+              <a href="/trips/<%= trip._id %>">
+                <%= trip.title || "Untitled Trip" %>
+              </a>
+              <div>
+                <small><%= trip.destination || "No destination yet" %></small>
               </div>
             </div>
 
-            <div class="actions">
-              <a class="pill" href="/trips/<%= trip._id %>/edit">Edit</a>
+            <div style="display:flex; gap:8px;">
+              <a class="btn" href="/trips/<%= trip._id %>/edit">Edit</a>
 
               <form action="/trips/<%= trip._id %>?_method=DELETE" method="POST">
-                <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this trip?')">Delete</button>
+                <button class="btn danger" type="submit">Delete</button>
               </form>
             </div>
-          </li>
+          </div>
         <% }) %>
-      </ul>
-    <% } %>
-  </div>
-</div>
+
+        <div class="footer-links">
+          <a href="/">Back Home</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
 
 
 

@@ -6,24 +6,19 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require("express-session");
-const connectMongo = require("connect-mongo");
+const MongoStore = require("connect-mongo");
 const path = require("path");
 
 const authRouter = require("./routes/auth");
 const tripsRouter = require("./routes/trips");
+const isSignedIn = require("./middleware/isSignedIn");
 
 const app = express();
-app.use((req, res, next) => {
-  console.log("REQ:", req.method, req.path);
-  next();
-});
-
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const SESSION_SECRET = process.env.SESSION_SECRET || "devsecret";
 
-// Connect DB
 (async function connectToMongo() {
   try {
     if (!MONGODB_URI) {
@@ -37,17 +32,15 @@ const SESSION_SECRET = process.env.SESSION_SECRET || "devsecret";
   }
 })();
 
-// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
-app.use(methodOverride("_method"));
 app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
-// Sessions
+app.use(express.static(path.join(__dirname, "public")));
+
 const sessionOptions = {
   secret: SESSION_SECRET,
   resave: false,
@@ -55,39 +48,36 @@ const sessionOptions = {
   cookie: { httpOnly: true },
 };
 
-// Session store
 if (MONGODB_URI) {
-  const cm = connectMongo.default || connectMongo;
-
-  if (typeof cm.create === "function") {
-    sessionOptions.store = cm.create({
-      mongoUrl: MONGODB_URI,
-      collectionName: "sessions",
-    });
-  } else if (typeof cm === "function") {
-    const MongoStore = cm(session);
-    sessionOptions.store = new MongoStore({
-      mongoUrl: MONGODB_URI,
-      collectionName: "sessions",
-    });
-  }
+  sessionOptions.store = MongoStore.create({
+    mongoUrl: MONGODB_URI,
+    collectionName: "sessions",
+  });
 }
 
 app.use(session(sessionOptions));
 
-// Locals
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   next();
 });
 
-// Routes
-app.get("/", (req, res) => res.render("home"));
-app.use("/auth", authRouter);
-app.use("/trips", tripsRouter);
+app.get("/", (req, res) => {
+  res.render("home");
+});
 
-// Start
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.use("/auth", authRouter);
+
+app.use("/trips", isSignedIn, tripsRouter);
+
+app.use((req, res) => {
+  res.status(404).send("Not Found");
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
 
 
 

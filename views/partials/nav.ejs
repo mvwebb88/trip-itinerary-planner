@@ -1,31 +1,28 @@
-<link rel="stylesheet" href="/styles.css" />
+<!-- views/partials/nav.ejs -->
+<header class="navbar">
+  <div class="brand">
+    <strong>Trip Itinerary Planner</strong>
+    <span>Plan • Pack • Go</span>
+  </div>
 
-<div class="container">
-  <header class="header">
-    <div class="brand">
-      <div class="brand-badge">🧭</div>
-      <div>
-        <div>Trip Itinerary Planner</div>
-        <div class="badge">Plan • Pack • Go</div>
-      </div>
-    </div>
+  <nav class="navlinks">
+    <a href="/">Home</a>
+    <a href="/trips">Trips</a>
+  </nav>
 
-    <div class="nav-links">
-      <a class="pill" href="/">Home</a>
+  <div class="nav-right">
+    <% if (user) { %>
+      <span class="pill">Hi, <%= user.name %></span>
+      <form action="/auth/sign-out" method="POST" style="margin:0;">
+        <button class="btn btn-secondary" type="submit">Sign Out</button>
+      </form>
+    <% } else { %>
+      <a class="btn btn-secondary" href="/auth/sign-in">Sign In</a>
+      <a class="btn" href="/auth/sign-up">Sign Up</a>
+    <% } %>
+  </div>
+</header>
 
-      <% if (user) { %>
-        <a class="pill" href="/trips">Trips</a>
-        <span class="badge">Hi, <%= user.name %></span>
 
-        <form action="/auth/sign-out" method="POST" style="display:inline;">
-          <button class="btn btn-secondary" type="submit">Sign Out</button>
-        </form>
-      <% } else { %>
-        <a class="pill" href="/auth/sign-in">Sign In</a>
-        <a class="btn" href="/auth/sign-up">Sign Up</a>
-      <% } %>
-    </div>
-  </header>
-</div>
 
 
