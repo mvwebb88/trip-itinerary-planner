@@ -1,32 +1,61 @@
-<%- include("../partials/head", { title: "Sign In" }) %>
-<%- include("../partials/nav") %>
+<%
+  const errorMsg = (typeof error !== "undefined" && error) ? error : null;
+  const formData = (typeof form !== "undefined" && form) ? form : { email: "" };
+%>
 
-<section class="card">
-  <h2>Sign In</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
 
-  <% if (error) { %>
-    <div class="error"><%= error %></div>
-  <% } %>
+  <%- include("../partials/nav") %>
 
-  <form class="form" action="/auth/sign-in" method="POST">
-    <div class="field">
-      <label>Email</label>
-      <input type="email" name="email" required />
-    </div>
+  <main class="container">
+    <section class="card">
+      <h1>Sign In</h1>
 
-    <div class="field">
-      <label>Password</label>
-      <input type="password" name="password" required />
-    </div>
+      <% if (errorMsg) { %>
+        <p class="alert"><%= errorMsg %></p>
+      <% } %>
 
-    <div class="actions">
-      <button class="btn" type="submit">Sign In</button>
-      <a class="btn btn-secondary" href="/auth/sign-up">Create account</a>
-    </div>
-  </form>
-</section>
+      <form class="form" action="/auth/sign-in" method="POST">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value="<%= formData.email || '' %>"
+          required
+        />
 
-<%- include("../partials/foot") %>
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          required
+        />
+
+        <button class="btn btn-primary" type="submit">Sign In</button>
+      </form>
+
+      <p class="muted">
+        Don’t have an account? <a href="/auth/sign-up">Sign Up</a>
+      </p>
+    </section>
+  </main>
+
+</body>
+</html>
+
+
+
+
 
 
 

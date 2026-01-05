@@ -1,37 +1,24 @@
-<%- include("partials/head", { title: "Home" }) %>
-<%- include("partials/nav") %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trip Itinerary Planner</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <%- include("partials/nav") %>
 
-<section class="hero">
-  <h1>Plan your next adventure</h1>
-  <p>Create trips, track destinations and dates, and keep everything organized in one place.</p>
+    <main class="container">
+      <section class="card">
+        <h1>Plan your next adventure</h1>
+        <p>Create trips, track destinations and dates, and keep everything organized in one place.</p>
+        <a class="btn btn-primary" href="/trips">Go to Trips</a>
+      </section>
+    </main>
+  </body>
+</html>
 
-  <div class="actions">
-    <a class="btn btn-secondary" href="/trips">View My Trips</a>
-    <a class="btn" href="/trips/new">Create a Trip</a>
-  </div>
-</section>
 
-<div class="grid">
-  <section class="card">
-    <h2>What you can do</h2>
-    <ul>
-      <li>Create trips</li>
-      <li>Edit trip details</li>
-      <li>Delete trips you don’t need</li>
-      <li>Private trips per user</li>
-    </ul>
-  </section>
 
-  <aside class="card">
-    <h2>Quick tip</h2>
-    <p class="muted">Start with a trip title and destination — you can always edit details later.</p>
-    <div class="actions">
-      <a class="btn" href="/trips">Go to Trips</a>
-    </div>
-  </aside>
-</div>
-
-<%- include("partials/foot") %>
 
 
 

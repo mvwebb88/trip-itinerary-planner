@@ -1,37 +1,63 @@
-<%- include("../partials/head", { title: "Sign Up" }) %>
-<%- include("../partials/nav") %>
+<%
+// crash-proof defaults
+const errorMsg = (typeof error !== "undefined" && error) ? error : null;
+const formData = (typeof form !== "undefined" && form) ? form : { name: "", email: "" };
+%>
 
-<section class="card">
-  <h2>Sign Up</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
 
-  <% if (error) { %>
-    <div class="error"><%= error %></div>
-  <% } %>
+  <%- include("../partials/nav") %>
 
-  <form class="form" action="/auth/sign-up" method="POST">
-    <div class="field">
-      <label>Name</label>
-      <input name="name" required />
-    </div>
+  <main class="container">
+    <section class="card">
+      <h1>Sign Up</h1>
 
-    <div class="field">
-      <label>Email</label>
-      <input type="email" name="email" required />
-    </div>
+      <% if (errorMsg) { %>
+        <p class="alert"><%= errorMsg %></p>
+      <% } %>
 
-    <div class="field">
-      <label>Password</label>
-      <input type="password" name="password" required />
-    </div>
+      <form class="form" action="/auth/sign-up" method="POST">
+        <label>Name</label>
+        <input
+          type="text"
+          name="name"
+          value="<%= formData.name || '' %>"
+          required
+        />
 
-    <div class="actions">
-      <button class="btn" type="submit">Create Account</button>
-      <a class="btn btn-secondary" href="/auth/sign-in">Already have one?</a>
-    </div>
-  </form>
-</section>
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          value="<%= formData.email || '' %>"
+          required
+        />
 
-<%- include("../partials/foot") %>
+        <label>Password</label>
+        <input type="password" name="password" required />
+
+        <button class="btn" type="submit">Create Account</button>
+      </form>
+
+      <p class="muted">
+        Already have an account? <a href="/auth/sign-in">Sign in</a>
+      </p>
+    </section>
+  </main>
+
+</body>
+</html>
+
+
+
 
 
 

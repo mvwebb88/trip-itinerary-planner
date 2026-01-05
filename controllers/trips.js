@@ -3,7 +3,7 @@ const Trip = require("../models/Trip");
 
 exports.index = async (req, res) => {
   try {
-    const trips = await Trip.find({ owner: req.session.user.id }).sort({ createdAt: -1 });
+    const trips = await Trip.find({ owner: req.session.user._id }).sort({ createdAt: -1 });
     res.render("trips/index", { trips, error: null });
   } catch (err) {
     console.log("TRIPS INDEX ERROR:", err);
@@ -12,7 +12,6 @@ exports.index = async (req, res) => {
 };
 
 exports.renderNew = (req, res) => {
-  // Always pass error so EJS never crashes
   res.render("trips/new", { error: null });
 };
 
@@ -20,14 +19,13 @@ exports.create = async (req, res) => {
   try {
     const { title, destination, startDate, endDate, notes } = req.body;
 
-    // Create trip and attach owner from session
     await Trip.create({
       title: title?.trim(),
       destination: destination?.trim(),
       startDate: startDate || undefined,
       endDate: endDate || undefined,
       notes: notes?.trim(),
-      owner: req.session.user.id,
+      owner: req.session.user._id,
     });
 
     res.redirect("/trips");
@@ -39,7 +37,7 @@ exports.create = async (req, res) => {
 
 exports.show = async (req, res) => {
   try {
-    const trip = await Trip.findOne({ _id: req.params.id, owner: req.session.user.id });
+    const trip = await Trip.findOne({ _id: req.params.id, owner: req.session.user._id });
     if (!trip) return res.redirect("/trips");
     res.render("trips/show", { trip, error: null });
   } catch (err) {
@@ -50,7 +48,7 @@ exports.show = async (req, res) => {
 
 exports.renderEdit = async (req, res) => {
   try {
-    const trip = await Trip.findOne({ _id: req.params.id, owner: req.session.user.id });
+    const trip = await Trip.findOne({ _id: req.params.id, owner: req.session.user._id });
     if (!trip) return res.redirect("/trips");
     res.render("trips/edit", { trip, error: null });
   } catch (err) {
@@ -64,7 +62,7 @@ exports.update = async (req, res) => {
     const { title, destination, startDate, endDate, notes } = req.body;
 
     await Trip.findOneAndUpdate(
-      { _id: req.params.id, owner: req.session.user.id },
+      { _id: req.params.id, owner: req.session.user._id },
       {
         title: title?.trim(),
         destination: destination?.trim(),
@@ -84,13 +82,14 @@ exports.update = async (req, res) => {
 
 exports.destroy = async (req, res) => {
   try {
-    await Trip.findOneAndDelete({ _id: req.params.id, owner: req.session.user.id });
+    await Trip.findOneAndDelete({ _id: req.params.id, owner: req.session.user._id });
     res.redirect("/trips");
   } catch (err) {
     console.log("TRIPS DELETE ERROR:", err);
     res.redirect("/trips");
   }
 };
+
 
 
 
