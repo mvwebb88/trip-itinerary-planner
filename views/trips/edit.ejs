@@ -1,31 +1,49 @@
-<h1>Edit Trip</h1>
+<%- include("../partials/nav") %>
 
-<% if (error) { %>
-  <p style="color:red;"><%= error %></p>
-<% } %>
+<div class="container">
+  <div class="card">
+    <h1>Edit Trip</h1>
 
-<form action="/trips/<%= trip._id %>?_method=PUT" method="POST">
-  <label>Title</label><br/>
-  <input name="title" value="<%= trip.title %>" required /><br/><br/>
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
 
-  <label>Destination</label><br/>
-  <input name="destination" value="<%= trip.destination || '' %>" /><br/><br/>
+    <form action="/trips/<%= trip._id %>?_method=PUT" method="POST">
+      <div>
+        <label>Title</label>
+        <input name="title" value="<%= trip.title %>" required />
+      </div>
 
-  <label>Start Date</label><br/>
-  <input type="date" name="startDate"
-    value="<%= trip.startDate ? trip.startDate.toISOString().slice(0,10) : '' %>" /><br/><br/>
+      <div>
+        <label>Destination</label>
+        <input name="destination" value="<%= trip.destination || '' %>" />
+      </div>
 
-  <label>End Date</label><br/>
-  <input type="date" name="endDate"
-    value="<%= trip.endDate ? trip.endDate.toISOString().slice(0,10) : '' %>" /><br/><br/>
+      <div class="row">
+        <div style="flex:1;">
+          <label>Start Date</label>
+          <input type="date" name="startDate" value="<%= trip.startDate ? trip.startDate.toISOString().slice(0,10) : '' %>" />
+        </div>
 
-  <label>Notes</label><br/>
-  <input name="notes" value="<%= trip.notes || '' %>" /><br/><br/>
+        <div style="flex:1;">
+          <label>End Date</label>
+          <input type="date" name="endDate" value="<%= trip.endDate ? trip.endDate.toISOString().slice(0,10) : '' %>" />
+        </div>
+      </div>
 
-  <button type="submit">Save Changes</button>
-</form>
+      <div>
+        <label>Notes</label>
+        <textarea name="notes"><%= trip.notes || "" %></textarea>
+      </div>
 
-<p><a href="/trips/<%= trip._id %>">Cancel</a></p>
+      <div class="row">
+        <button class="btn" type="submit">Save Changes</button>
+        <a class="btn btn-secondary" href="/trips/<%= trip._id %>">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
 
 
 

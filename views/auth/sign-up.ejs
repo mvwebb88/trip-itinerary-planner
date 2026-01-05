@@ -1,24 +1,35 @@
-<h1>Sign Up</h1>
+<%- include("../partials/nav") %>
 
-<% if (error) { %>
-  <p style="color:red;"><%= error %></p>
-<% } %>
+<div class="container">
+  <div class="card">
+    <h1>Sign Up</h1>
 
-<form action="/auth/sign-up" method="POST">
-  <label>Name</label>
-  <input name="name" required />
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
 
-  <label>Email</label>
-  <input type="email" name="email" required />
+    <form action="/auth/sign-up" method="POST">
+      <div>
+        <label>Name</label>
+        <input name="name" required />
+      </div>
 
-  <label>Password</label>
-  <input type="password" name="password" required />
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" required />
+      </div>
 
-  <button type="submit">Create Account</button>
-</form>
+      <div>
+        <label>Password</label>
+        <input type="password" name="password" required />
+      </div>
 
-<p>Already have an account? <a href="/auth/sign-in">Sign in</a></p>
-<p><a href="/">Home</a></p>
+      <button class="btn" type="submit">Create Account</button>
+      <a class="btn btn-secondary" href="/auth/sign-in">I already have an account</a>
+    </form>
+  </div>
+</div>
+
 
 
 

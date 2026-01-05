@@ -1,31 +1,41 @@
-<h1>Your Trips</h1>
+<%- include("../partials/nav") %>
 
-<a href="/trips/new">+ New Trip</a>
-<hr />
+<div class="container">
+  <div class="card">
+    <div class="row">
+      <h1>Your Trips</h1>
+      <a class="btn" href="/trips/new">+ New Trip</a>
+    </div>
 
-<% if (error) { %>
-  <p style="color:red;"><%= error %></p>
-<% } %>
+    <hr />
 
-<% if (!trips.length) { %>
-  <p>No trips yet.</p>
-<% } %>
+    <% if (!trips.length) { %>
+      <p>No trips yet. Create your first adventure ✈️</p>
+    <% } else { %>
+      <ul class="list">
+        <% trips.forEach(trip => { %>
+          <li class="list-item">
+            <div class="list-main">
+              <a class="list-title" href="/trips/<%= trip._id %>"><%= trip.title %></a>
+              <div class="list-sub">
+                <%= trip.destination ? trip.destination : "No destination yet" %>
+              </div>
+            </div>
 
-<ul>
-  <% trips.forEach(trip => { %>
-    <li>
-      <a href="/trips/<%= trip._id %>"><%= trip.title %></a>
-      <% if (trip.destination) { %> - <%= trip.destination %> <% } %>
+            <div class="actions">
+              <a class="pill" href="/trips/<%= trip._id %>/edit">Edit</a>
 
-      | <a href="/trips/<%= trip._id %>/edit">Edit</a>
+              <form action="/trips/<%= trip._id %>?_method=DELETE" method="POST">
+                <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this trip?')">Delete</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
+</div>
 
-      <form action="/trips/<%= trip._id %>?_method=DELETE" method="POST" style="display:inline;">
-        <button type="submit" onclick="return confirm('Delete this trip?')">Delete</button>
-      </form>
-    </li>
-  <% }) %>
-</ul>
 
-<a href="/">Back Home</a>
 
 

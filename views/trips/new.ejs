@@ -1,29 +1,49 @@
-<h1>New Trip</h1>
+<%- include("../partials/nav") %>
 
-<% if (error) { %>
-  <p style="color:red;"><%= error %></p>
-<% } %>
+<div class="container">
+  <div class="card">
+    <h1>New Trip</h1>
 
-<form action="/trips" method="POST">
-  <label>Title</label><br/>
-  <input name="title" required /><br/><br/>
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
 
-  <label>Destination</label><br/>
-  <input name="destination" /><br/><br/>
+    <form action="/trips" method="POST">
+      <div>
+        <label>Title</label>
+        <input name="title" required placeholder="e.g., Weekend in NYC" />
+      </div>
 
-  <label>Start Date</label><br/>
-  <input type="date" name="startDate" /><br/><br/>
+      <div>
+        <label>Destination</label>
+        <input name="destination" placeholder="e.g., New York City" />
+      </div>
 
-  <label>End Date</label><br/>
-  <input type="date" name="endDate" /><br/><br/>
+      <div class="row">
+        <div style="flex:1;">
+          <label>Start Date</label>
+          <input type="date" name="startDate" />
+        </div>
 
-  <label>Notes</label><br/>
-  <input name="notes" /><br/><br/>
+        <div style="flex:1;">
+          <label>End Date</label>
+          <input type="date" name="endDate" />
+        </div>
+      </div>
 
-  <button type="submit">Create Trip</button>
-</form>
+      <div>
+        <label>Notes</label>
+        <textarea name="notes" placeholder="Packing list, hotel, flight info..."></textarea>
+      </div>
 
-<a href="/trips">Cancel</a>
+      <div class="row">
+        <button class="btn" type="submit">Create Trip</button>
+        <a class="btn btn-secondary" href="/trips">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
 
 
 

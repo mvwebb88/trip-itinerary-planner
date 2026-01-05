@@ -1,13 +1,42 @@
-<h1>Trip Itinerary Planner</h1>
-<p>Plan trips and build itineraries.</p>
+<%- include("partials/nav") %>
 
-<% if (!user) { %>
-  <a href="/auth/sign-up">Sign Up</a> | <a href="/auth/sign-in">Sign In</a>
-<% } else { %>
-  <p>Welcome, <%= user.username || user.email %>!</p>
-  <a href="/trips">View Trips</a>
-  <form action="/auth/sign-out?_method=DELETE" method="POST" style="margin-top:10px;">
-    <button>Sign Out</button>
-  </form>
-<% } %>
+<div class="container">
+  <div class="hero">
+    <section class="card">
+      <h1>Plan your next adventure</h1>
+      <p>
+        Create trips, track destinations and dates, and keep everything organized in one place.
+        Simple. Secure. Built for travel.
+      </p>
+
+      <div class="row" style="margin-top: 14px;">
+        <% if (user) { %>
+          <a class="btn" href="/trips">View My Trips</a>
+          <a class="btn btn-secondary" href="/trips/new">Create a Trip</a>
+        <% } else { %>
+          <a class="btn" href="/auth/sign-up">Get Started</a>
+          <a class="btn btn-secondary" href="/auth/sign-in">Sign In</a>
+        <% } %>
+      </div>
+
+      <p class="footer-note">Tip: Add your trip title + destination first, then edit later for dates and notes.</p>
+    </section>
+
+    <aside class="kpi">
+      <div class="card">
+        <h2>What you can do</h2>
+        <p><strong>✅ Create</strong> trips</p>
+        <p><strong>📝 Edit</strong> details</p>
+        <p><strong>🗑️ Delete</strong> trips you don’t need</p>
+        <p><strong>🔒 Private</strong> data per user</p>
+      </div>
+
+      <div class="card">
+        <h2>Travel vibe</h2>
+        <p>Clean layout • soft gradients • simple navigation • readable contrast</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
 
