@@ -4,6 +4,9 @@ A full-stack MEN (MongoDB, Express, Node.js) application that allows users to pl
 
 📸 Screenshot / Logo
 
+<img width="914" height="516" alt="image" src="https://github.com/user-attachments/assets/57caa4be-2129-4cff-97b3-a76f4d28d8f2" />
+
+
 🧭 Description
 
 Trip Itinerary Planner is a web application designed to help users plan and manage their travel experiences. After creating an account, users can create trips, add destinations and dates, edit trip details, and remove trips they no longer need. Each user only has access to their own data, ensuring privacy and security.
