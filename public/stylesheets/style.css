@@ -18,11 +18,18 @@ body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(14,165,233,.18), transparent 55%),
-    radial-gradient(900px 500px at 90% 20%, rgba(34,197,94,.14), transparent 55%),
-    linear-gradient(180deg, #ffffff, var(--bg));
   min-height: 100vh;
+
+  background:
+    radial-gradient(1000px 600px at 10% 15%, rgba(34,197,94,.25), transparent 55%), /* palm green */
+    radial-gradient(900px 500px at 85% 10%, rgba(14,165,233,.30), transparent 55%), /* ocean blue */
+    radial-gradient(700px 400px at 50% 90%, rgba(56,189,248,.25), transparent 55%), /* tropical sky */
+    linear-gradient(
+      180deg,
+      #ecfeff 0%,
+      #f0fdf4 40%,
+      #ffffff 100%
+    );
 }
 
 a{
