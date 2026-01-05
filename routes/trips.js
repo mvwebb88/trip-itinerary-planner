@@ -1,33 +1,21 @@
 // routes/trips.js
 const express = require("express");
 const router = express.Router();
-
-const isSignedIn = require("../middleware/isSignedIn");
 const tripsCtrl = require("../controllers/trips");
+const isSignedIn = require("../middleware/isSignedIn");
 
-// Protect all trips routes
-router.use(isSignedIn);
-
-// Trips index
-router.get("/", tripsCtrl.index);
-
-// New trip form
-router.get("/new", tripsCtrl.renderNew);
-
-// Create trip
-router.post("/", tripsCtrl.create);
-
-// Show trip
-router.get("/:tripId", tripsCtrl.show);
-
-// Edit trip form
-router.get("/:tripId/edit", tripsCtrl.renderEdit);
-
-// Update trip
-router.put("/:tripId", tripsCtrl.update);
-
-// Delete trip
-router.delete("/:tripId", tripsCtrl.delete);
+// Trips pages
+router.get("/", isSignedIn, tripsCtrl.index);
+router.get("/new", isSignedIn, tripsCtrl.renderNew);
+router.post("/", isSignedIn, tripsCtrl.create);
+router.get("/:id", isSignedIn, tripsCtrl.show);
+router.get("/:id/edit", isSignedIn, tripsCtrl.renderEdit);
+router.put("/:id", isSignedIn, tripsCtrl.update);
+router.delete("/:id", isSignedIn, tripsCtrl.destroy);
 
 module.exports = router;
+
+
+
+
 

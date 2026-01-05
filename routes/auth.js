@@ -3,22 +3,20 @@ const express = require("express");
 const router = express.Router();
 const authCtrl = require("../controllers/auth");
 
-// Show sign-up form
+// Show forms
 router.get("/sign-up", authCtrl.renderSignUp);
-
-// Process sign-up
-router.post("/sign-up", authCtrl.signUp);
-
-// Show sign-in form
 router.get("/sign-in", authCtrl.renderSignIn);
 
-// Process sign-in
+// Handle submits
+router.post("/sign-up", authCtrl.signUp);
 router.post("/sign-in", authCtrl.signIn);
 
-// Sign out
-router.get("/sign-out", authCtrl.signOut);
+// Logout
+router.post("/sign-out", authCtrl.signOut);
 
 module.exports = router;
+
+
 
 
 

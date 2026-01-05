@@ -1,4 +1,5 @@
 <h1>Your Trips</h1>
+
 <a href="/trips/new">+ New Trip</a>
 <hr />
 
@@ -9,9 +10,16 @@
 <ul>
   <% trips.forEach(trip => { %>
     <li>
-      <a href="/trips/<%= trip._id %>"><%= trip.title || "Untitled Trip" %></a>
+      <a href="/trips/<%= trip._id %>">
+        <%= trip.title || "Untitled Trip" %>
+      </a>
+      <% if (trip.destination) { %>
+        - <%= trip.destination %>
+      <% } %>
     </li>
   <% }) %>
 </ul>
 
+<br />
 <a href="/">Back Home</a>
+

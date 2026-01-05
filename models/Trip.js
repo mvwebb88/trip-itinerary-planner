@@ -1,33 +1,20 @@
-// Import mongoose
+// models/Trip.js
 const mongoose = require("mongoose");
 
-// Define Trip schema
 const tripSchema = new mongoose.Schema(
   {
-    destination: {
-      type: String,
-      required: true,
-    },
-    startDate: {
-      type: Date,
-      required: true,
-    },
-    endDate: {
-      type: Date,
-      required: true,
-    },
-    notes: {
-      type: String,
-    },
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference User model
-      required: true,
-    },
+    title: { type: String, required: true, trim: true },
+    destination: { type: String, trim: true },
+    startDate: { type: Date },
+    endDate: { type: Date },
+    notes: { type: String, trim: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
 
-// Export Trip model
 module.exports = mongoose.model("Trip", tripSchema);
+
+
+
 

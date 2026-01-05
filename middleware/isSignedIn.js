@@ -1,6 +1,10 @@
 // middleware/isSignedIn.js
 module.exports = function isSignedIn(req, res, next) {
-  if (req.session && req.session.user) return next();
-  return res.redirect("/auth/sign-in");
+  // Protect routes by requiring a logged-in session user
+  if (!req.session.user || !req.session.user.id) return res.redirect("/auth/sign-in");
+  next();
 };
+
+
+
 

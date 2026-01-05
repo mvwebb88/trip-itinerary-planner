@@ -1,5 +1,9 @@
 <h1>New Trip</h1>
 
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
 <form action="/trips" method="POST">
   <label>Title</label><br/>
   <input name="title" required /><br/><br/>
@@ -13,7 +17,13 @@
   <label>End Date</label><br/>
   <input type="date" name="endDate" /><br/><br/>
 
-  <button>Create Trip</button>
+  <label>Notes</label><br/>
+  <input name="notes" /><br/><br/>
+
+  <button type="submit">Create Trip</button>
 </form>
 
 <a href="/trips">Cancel</a>
+
+
+

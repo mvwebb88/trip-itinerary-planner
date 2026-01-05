@@ -1,20 +1,29 @@
 <h1>Edit Trip</h1>
 
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
 <form action="/trips/<%= trip._id %>?_method=PUT" method="POST">
-  <label>Title</label><br/>
-  <input name="title" value="<%= trip.title %>" required /><br/><br/>
+  <label>Title</label><br />
+  <input name="title" value="<%= trip.title || '' %>" required /><br /><br />
 
-  <label>Destination</label><br/>
-  <input name="destination" value="<%= trip.destination || '' %>" /><br/><br/>
+  <label>Destination</label><br />
+  <input name="destination" value="<%= trip.destination || '' %>" /><br /><br />
 
-  <label>Start Date</label><br/>
-  <input type="date" name="startDate" value="<%= trip.startDate ? trip.startDate.toISOString().slice(0,10) : '' %>"/><br/><br/>
+  <label>Start Date</label><br />
+  <input type="date" name="startDate" value="<%= trip.startDate ? trip.startDate.toISOString().slice(0,10) : '' %>" /><br /><br />
 
-  <label>End Date</label><br/>
-  <input type="date" name="endDate" value="<%= trip.endDate ? trip.endDate.toISOString().slice(0,10) : '' %>"/><br/><br/>
+  <label>End Date</label><br />
+  <input type="date" name="endDate" value="<%= trip.endDate ? trip.endDate.toISOString().slice(0,10) : '' %>" /><br /><br />
 
-  <button>Save</button>
+  <label>Notes</label><br />
+  <textarea name="notes" rows="4" cols="40"><%= trip.notes || '' %></textarea><br /><br />
+
+  <button type="submit">Save Changes</button>
 </form>
 
-<a href="/trips/<%= trip._id %>">Back</a>
+<br />
+<a href="/trips/<%= trip._id %>">Cancel</a>
+
 
