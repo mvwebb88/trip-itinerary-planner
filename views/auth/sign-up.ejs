@@ -1,5 +1,9 @@
 <h1>Sign Up</h1>
 
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
 <form action="/auth/sign-up" method="POST">
   <label>Name</label>
   <input type="text" name="name" required />
@@ -15,4 +19,6 @@
 
 <p>Already have an account? <a href="/auth/sign-in">Sign in</a></p>
 <p><a href="/">Home</a></p>
+
+
 

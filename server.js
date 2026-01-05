@@ -13,6 +13,11 @@ const authRouter = require("./routes/auth");
 const tripsRouter = require("./routes/trips");
 
 const app = express();
+app.use((req, res, next) => {
+  console.log("REQ:", req.method, req.path);
+  next();
+});
+
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
