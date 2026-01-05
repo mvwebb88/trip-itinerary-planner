@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Trip Itinerary Planner</title>
-  </head>
-  <body>
-    <h1>Trip Itinerary Planner</h1>
-    <p>Plan trips and build itineraries.</p>
+<h1>Trip Itinerary Planner</h1>
+<p>Plan trips and build itineraries.</p>
 
-    <a href="/auth/sign-up">Sign Up</a> |
-    <a href="/auth/sign-in">Sign In</a>
-  </body>
-</html>
+<% if (!user) { %>
+  <a href="/auth/sign-up">Sign Up</a> | <a href="/auth/sign-in">Sign In</a>
+<% } else { %>
+  <p>Welcome, <%= user.username || user.email %>!</p>
+  <a href="/trips">View Trips</a>
+  <form action="/auth/sign-out?_method=DELETE" method="POST" style="margin-top:10px;">
+    <button>Sign Out</button>
+  </form>
+<% } %>
+

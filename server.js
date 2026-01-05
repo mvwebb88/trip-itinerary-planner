@@ -1,75 +1,90 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const methodOverride = require('method-override');
-const morgan = require('morgan');
-require('dotenv').config();
+// server.js
+require("dotenv").config();
 
-const session = require('express-session');
+const express = require("express");
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
+const morgan = require("morgan");
+const session = require("express-session");
+const connectMongo = require("connect-mongo");
+const path = require("path");
 
-// connect-mongo export can vary (CJS vs ESM default export)
-const ConnectMongo = require('connect-mongo');
-const MongoStore = ConnectMongo.default || ConnectMongo;
-
-// Routers
-const authRouter = require('./routes/auth');
-const tripsRouter = require('./routes/trips');
+const authRouter = require("./routes/auth");
+const tripsRouter = require("./routes/trips");
 
 const app = express();
 
-/* ======================= DATABASE ======================= */
-mongoose.connect(process.env.MONGODB_URI);
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI;
+const SESSION_SECRET = process.env.SESSION_SECRET || "devsecret";
 
-mongoose.connection.on('connected', () => {
-  console.log('✅ Connected to MongoDB');
-});
+// Connect DB
+(async function connectToMongo() {
+  try {
+    if (!MONGODB_URI) {
+      console.log("⚠️ Missing MONGODB_URI. Server will run without DB.");
+      return;
+    }
+    await mongoose.connect(MONGODB_URI);
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.log("❌ MongoDB connection error:", err.message);
+  }
+})();
 
-mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err.message);
-});
+// View engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-/* ======================= VIEW ENGINE ======================= */
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
+app.use(morgan("dev"));
 
-/* ======================= MIDDLEWARE ======================= */
-app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: false }));
-app.use(methodOverride('_method'));
-app.use(express.static(path.join(__dirname, 'public')));
+// Sessions
+const sessionOptions = {
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true },
+};
 
-/* ======================= SESSIONS ======================= */
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create
-      ? MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
-      : new MongoStore({ mongoUrl: process.env.MONGODB_URI }),
-    cookie: { httpOnly: true },
-  })
-);
+// Session store
+if (MONGODB_URI) {
+  const cm = connectMongo.default || connectMongo;
 
-// Make userId available in all EJS views
+  if (typeof cm.create === "function") {
+    sessionOptions.store = cm.create({
+      mongoUrl: MONGODB_URI,
+      collectionName: "sessions",
+    });
+  } else if (typeof cm === "function") {
+    const MongoStore = cm(session);
+    sessionOptions.store = new MongoStore({
+      mongoUrl: MONGODB_URI,
+      collectionName: "sessions",
+    });
+  }
+}
+
+app.use(session(sessionOptions));
+
+// Locals
 app.use((req, res, next) => {
-  res.locals.userId = req.session.userId || null;
+  res.locals.user = req.session.user || null;
   next();
 });
 
-/* ======================= ROUTES ======================= */
-app.get('/', (req, res) => {
-  res.render('home');
-});
+// Routes
+app.get("/", (req, res) => res.render("home"));
+app.use("/auth", authRouter);
+app.use("/trips", tripsRouter);
 
-app.use('/auth', authRouter);
-app.use('/trips', tripsRouter);
+// Start
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
-/* ======================= SERVER ======================= */
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+
 
 
 

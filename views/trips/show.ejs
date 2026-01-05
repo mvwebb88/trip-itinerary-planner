@@ -1,0 +1,19 @@
+<h1><%= trip.title %></h1>
+<p><strong>Destination:</strong> <%= trip.destination || "—" %></p>
+
+<p>
+  <strong>Dates:</strong>
+  <%= trip.startDate ? trip.startDate.toDateString() : "—" %>
+  to
+  <%= trip.endDate ? trip.endDate.toDateString() : "—" %>
+</p>
+
+<a href="/trips/<%= trip._id %>/edit">Edit</a>
+
+<form action="/trips/<%= trip._id %>?_method=DELETE" method="POST" style="margin-top:10px;">
+  <button>Delete Trip</button>
+</form>
+
+<hr/>
+<a href="/trips">Back to Trips</a>
+

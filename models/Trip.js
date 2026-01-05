@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
+// Import mongoose
+const mongoose = require("mongoose");
 
+// Define Trip schema
 const tripSchema = new mongoose.Schema(
   {
     destination: {
@@ -19,11 +21,13 @@ const tripSchema = new mongoose.Schema(
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User", // Reference User model
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Trip', tripSchema);
+// Export Trip model
+module.exports = mongoose.model("Trip", tripSchema);
+

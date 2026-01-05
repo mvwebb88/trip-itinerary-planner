@@ -1,0 +1,17 @@
+<h1>Your Trips</h1>
+<a href="/trips/new">+ New Trip</a>
+<hr />
+
+<% if (!trips.length) { %>
+  <p>No trips yet.</p>
+<% } %>
+
+<ul>
+  <% trips.forEach(trip => { %>
+    <li>
+      <a href="/trips/<%= trip._id %>"><%= trip.title || "Untitled Trip" %></a>
+    </li>
+  <% }) %>
+</ul>
+
+<a href="/">Back Home</a>

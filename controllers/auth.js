@@ -1,58 +1,70 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const bcrypt = require("bcrypt");
+const User = require("../models/User");
 
-const SALT_ROUNDS = 10;
+function renderSignUp(req, res) {
+  res.render("auth/sign-up");
+}
 
-exports.renderSignUp = (req, res) => {
-  res.render('auth/sign-up', { error: null });
-};
+function renderSignIn(req, res) {
+  res.render("auth/sign-in");
+}
 
-exports.renderSignIn = (req, res) => {
-  res.render('auth/sign-in', { error: null });
-};
-
-exports.signUp = async (req, res) => {
+async function signUp(req, res) {
   try {
-    const { username, password, confirmPassword } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!username || !password) {
-      return res.render('auth/sign-up', { error: 'All fields are required.' });
-    }
+    if (!name || !email || !password) return res.redirect("/auth/sign-up");
 
-    if (password !== confirmPassword) {
-      return res.render('auth/sign-up', { error: 'Passwords do not match.' });
-    }
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) return res.redirect("/auth/sign-up");
 
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    const user = await User.create({ username: username.trim(), passwordHash });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    req.session.userId = user._id;
-    return res.redirect('/trips');
+    const user = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+    });
+
+    req.session.user = { _id: user._id, name: user.name, email: user.email };
+
+    res.redirect("/trips");
   } catch (err) {
-    const msg = err.code === 11000 ? 'Username is already taken.' : 'Sign up failed.';
-    return res.render('auth/sign-up', { error: msg });
+    console.log("SIGN UP ERROR:", err.message);
+    res.redirect("/auth/sign-up");
   }
-};
+}
 
-exports.signIn = async (req, res) => {
+async function signIn(req, res) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ username: username.trim() });
-    if (!user) return res.render('auth/sign-in', { error: 'Invalid credentials.' });
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.redirect("/auth/sign-in");
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) return res.render('auth/sign-in', { error: 'Invalid credentials.' });
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.redirect("/auth/sign-in");
 
-    req.session.userId = user._id;
-    return res.redirect('/trips');
+    req.session.user = { _id: user._id, name: user.name, email: user.email };
+
+    res.redirect("/trips");
   } catch (err) {
-    return res.render('auth/sign-in', { error: 'Sign in failed.' });
+    console.log("SIGN IN ERROR:", err.message);
+    res.redirect("/auth/sign-in");
   }
-};
+}
 
-exports.signOut = (req, res) => {
+function signOut(req, res) {
   req.session.destroy(() => {
-    res.redirect('/');
+    res.redirect("/");
   });
+}
+
+module.exports = {
+  renderSignUp,
+  renderSignIn,
+  signUp,
+  signIn,
+  signOut,
 };
+
